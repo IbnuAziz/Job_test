@@ -7,6 +7,7 @@ const MongoClient = require('mongodb').MongoClient;
 
 const shoppingRoutes = require('./api/routes/shoppings');
 const orderRoutes = require('./api/routes/orders');
+const userRoutes = require('./api/routes/users');
 
 
 mongoose.connect("mongodb+srv://testv1:test@project-v1.iufrr.mongodb.net/Project-v1?retryWrites=true&w=majority",
@@ -15,6 +16,8 @@ mongoose.connect("mongodb+srv://testv1:test@project-v1.iufrr.mongodb.net/Project
 	    useUnifiedTopology: true 
 	}
 );
+
+mongoose.set('useCreateIndex', true);
 mongoose.Promise = global.Promise;
 
 app.use(morgan('dev'));
@@ -39,6 +42,7 @@ app.use((req, res, next) => {
 
 app.use('/shopping', shoppingRoutes);
 app.use('/orders', orderRoutes);
+app.use('/users', userRoutes);
 
 //Handling Error Message
 app.use((req, res, next) => {

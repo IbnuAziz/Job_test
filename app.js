@@ -10,7 +10,9 @@ const orderRoutes = require('./api/routes/orders');
 const userRoutes = require('./api/routes/users');
 
 
-mongoose.connect("mongodb+srv://testv1:test@project-v1.iufrr.mongodb.net/Project-v1?retryWrites=true&w=majority",
+mongoose.connect("mongodb+srv://testv1:" +
+	process.env.MONGO_ATLAS_PW +
+	"@project-v1.iufrr.mongodb.net/Project-v1?retryWrites=true&w=majority",
     {
 	    useNewUrlParser: true,
 	    useUnifiedTopology: true 
@@ -40,7 +42,7 @@ app.use((req, res, next) => {
 });
 
 
-app.use('/shopping', shoppingRoutes);
+app.use('/shoppings', shoppingRoutes);
 app.use('/orders', orderRoutes);
 app.use('/users', userRoutes);
 

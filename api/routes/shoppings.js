@@ -1,12 +1,39 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+	destination: function(req, file, cb){
+		cb(null,  'uploads');
+	},
+	filename: function(req, file, cb){
+		cb(null, file.originalname);
+	}
+});
+
+const fileFilter = (req, file, cb) =>{
+	if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+		cb(null, true);
+	}else{
+		cb(null, false);
+	}
+}
+
+const upload = multer({
+	storage: storage, 
+	limits: {
+		fileSize: 1024 * 1024 * 5
+	},
+	fileFilter: fileFilter
+});
+
 
 const Shopping = require('../models/shopping');
 
 router.get('/', (req, res, next) =>{
 	Shopping.find()
-	.select('name createDate _id')
+	.select('name createDate _id shoppingImage')
 	.exec()
 	.then(docs => {
 		const response = {
@@ -15,6 +42,7 @@ router.get('/', (req, res, next) =>{
 				return{
 					name: doc.name,
 					price: doc.createDate,
+					shoppingImage: doc.shoppingImage,
 					_id: doc._id,
 					request:{
 						type: 'GET',
@@ -42,11 +70,12 @@ router.get('/', (req, res, next) =>{
 });
 
 
-router.post ('/', (req, res, next) => {
+router.post ('/', upload.single('shoppingImage'), (req, res, next) => {
     const shopping = new Shopping({
 		_id: new mongoose.Types.ObjectId(),
 		name: req.body.name,
-		createDate: req.body.createDate
+		createDate: req.body.createDate,
+		shoppingImage: req.file.path
     });
     shopping
 	.save()
@@ -75,10 +104,10 @@ router.post ('/', (req, res, next) => {
 router.get('/:shoppingId', (req, res, next) =>{
 	const id = req.params.shoppingId;
 	Shopping.findById(id)
-	.select('name createDate _id')
+	.select('name createDate _id shoppingImage')
 	.exec()
 	.then(doc =>{
-		console.log(doc);
+		console.log("From Database", doc);
 	if (doc){
 		res.status(200).json({
 			product: doc,

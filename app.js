@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 const MongoClient = require('mongodb').MongoClient;
 
 const shoppingRoutes = require('./api/routes/shoppings');
+const orderRoutes = require('./api/routes/orders');
+
 
 mongoose.connect("mongodb+srv://testv1:test@project-v1.iufrr.mongodb.net/Project-v1?retryWrites=true&w=majority",
     {
@@ -13,19 +15,10 @@ mongoose.connect("mongodb+srv://testv1:test@project-v1.iufrr.mongodb.net/Project
 	    useUnifiedTopology: true 
 	}
 );
-
-// const uri = "mongodb+srv://testv1:test@project-v1.iufrr.mongodb.net/Project-v1?retryWrites=true&w=majority";
-// const client = new MongoClient(uri, { useNewUrlParser: true });
-// client.connect(err => {
-//   const collection = client.db("test").collection("devices");
-// perform actions on the collection object
-//   client.close();
-// });
-
-
 mongoose.Promise = global.Promise;
 
 app.use(morgan('dev'));
+app.use('/uploads', express.static('uploads')); // make uploads folder publicly access
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -45,6 +38,7 @@ app.use((req, res, next) => {
 
 
 app.use('/shopping', shoppingRoutes);
+app.use('/orders', orderRoutes);
 
 //Handling Error Message
 app.use((req, res, next) => {

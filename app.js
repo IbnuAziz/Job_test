@@ -10,14 +10,14 @@ const orderRoutes = require('./api/routes/orders');
 const userRoutes = require('./api/routes/users');
 
 
-mongoose.connect("mongodb+srv://testv1:" +
-	process.env.MONGO_ATLAS_PW +
-	"@project-v1.iufrr.mongodb.net/Project-v1?retryWrites=true&w=majority",
-    {
-	    useNewUrlParser: true,
-	    useUnifiedTopology: true 
-	}
-);
+var mongoString = "mongodb+srv://EnkripsiAES128:enkripsiAES128@cluster0.3yt2b.gcp.mongodb.net/testcoding?retryWrites=true&w=majority"
+
+mongoose.connect(mongoString, {
+  useNewUrlParser: true, 
+  useUnifiedTopology: true,
+  useFindAndModify: false
+})
+
 
 mongoose.set('useCreateIndex', true);
 mongoose.Promise = global.Promise;

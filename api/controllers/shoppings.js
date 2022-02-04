@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 exports.shoppings_get_all =  (req, res, next) =>{
 	Shopping.find()
-	.select('name createDate _id shoppingImage')
+	.select('name createDate _id')
 	.exec()
 	.then(docs => {
 		const response = {
@@ -11,12 +11,11 @@ exports.shoppings_get_all =  (req, res, next) =>{
 			shopping: docs.map(doc => {
 				return{
 					name: doc.name,
-					price: doc.createDate,
-					shoppingImage: doc.shoppingImage,
+					createDate: doc.createDate,
 					_id: doc._id,
 					request:{
 						type: 'GET',
-						url: 'http://localhost:3000/shopping/' + doc._id
+						url: 'http://localhost:3000/shoppings/' + doc._id
 					}
 				}
 			})
@@ -44,7 +43,6 @@ exports.shoppings_create = (req, res, next) => {
 		_id: new mongoose.Types.ObjectId(),
 		name: req.body.name,
 		createDate: req.body.createDate,
-		shoppingImage: req.file.path
     });
     shopping
 	.save()
@@ -58,7 +56,7 @@ exports.shoppings_create = (req, res, next) => {
 			_id: result._id,
 			reqeust: {
 				type: 'GET',
-				url: `http://localhost:3000/shopping/${result._id}`
+				url: `http://localhost:3000/shoppings/${result._id}`
 			}
 		}
 	});
@@ -73,7 +71,7 @@ exports.shoppings_create = (req, res, next) => {
 exports.shoppings_get_byId = (req, res, next) =>{
 	const id = req.params.shoppingId;
 	Shopping.findById(id)
-	.select('name createDate _id shoppingImage')
+	.select('name createDate _id')
 	.exec()
 	.then(doc =>{
 		console.log("From Database", doc);
@@ -82,7 +80,7 @@ exports.shoppings_get_byId = (req, res, next) =>{
 			product: doc,
 			reqeust: {
 				type: 'GET',
-				url: 'http://localhost:300/shopping'
+				url: 'http://localhost:300/shoppings'
 			}
 		});
 	}else
@@ -109,7 +107,7 @@ exports.shoppings_update = (req, res, next) =>{
 			message: 'Shopping updated!',
 			reqeust: {
 				type: 'GET',
-				url: 'http://localhost:3000/shopping/' + id
+				url: 'http://localhost:3000/shoppings/' + id
 			}
 		});
 	})
@@ -130,7 +128,7 @@ exports.shoppings_delete = (req, res, next) =>{
 			message: 'shopping deleted!',
 			reqeust: {
 				type: 'POST',
-				url: 'http://localhost:3000/shopping',
+				url: 'http://localhost:3000/shoppings',
 				body:{ name: 'String', createDate: 'String' }
 			}
 		})

@@ -23,7 +23,7 @@ mongoose.set('useCreateIndex', true);
 mongoose.Promise = global.Promise;
 
 app.use(morgan('dev'));
-app.use('/uploads', express.static('uploads')); // make uploads folder publicly access
+// app.use('/uploads', express.static('uploads')); // make uploads folder publicly access
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
